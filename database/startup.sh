@@ -142,6 +142,16 @@ export POSTGRES_DB="${DB_NAME}"
 export POSTGRES_PORT="${DB_PORT}"
 EOF
 
+# Apply migrations (initial schema + future upgrades)
+echo ""
+echo "Applying database migrations..."
+chmod +x ./migrate.sh 2>/dev/null || true
+./migrate.sh || {
+    echo "⚠ Migration step failed. Check output above."
+    exit 1
+}
+
+echo ""
 echo "PostgreSQL setup complete!"
 echo "Database: ${DB_NAME}"
 echo "User: ${DB_USER}"
